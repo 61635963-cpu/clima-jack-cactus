@@ -1,0 +1,385 @@
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima Cactus Jack - Perú e Internacional</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: #120e0d; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; position: relative; overflow-x: hidden; }
+
+        /* LOGOS ESTILO NEÓN ROSADO */
+        .logo-fondo { position: absolute; opacity: 0.25; pointer-events: none; fill: none; stroke: #ff80ab; stroke-width: 3.5; stroke-linecap: round; filter: drop-shadow(0 0 8px rgba(255, 128, 171, 0.4)); }
+        .logo-carita { top: 3%; left: 3%; width: 140px; height: 140px; }
+        .logo-cruz { bottom: 3%; right: 3%; width: 120px; height: 190px; }
+
+        /* BOTÓN EN LA ESQUINA SUPERIOR DERECHA (SIN LINK EXTERNO) */
+        .btn-portafolio {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .btn-portafolio:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 8px #ff80ab);
+        }
+        .btn-portafolio svg {
+            width: 38px;
+            height: 38px;
+            stroke: #ff80ab;
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
+        }
+        .btn-portafolio span {
+            color: #ff80ab;
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 3px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .card { position: relative; z-index: 2; background: #211a18; border: 1px solid #3d312e; padding: 20px; border-radius: 14px; width: 100%; max-width: 440px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.85); }
+        h2 { font-size: 16px; margin-bottom: 6px; color: #ff80ab; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* RELOJ NEÓN CON SEGUNDOS */
+        .reloj-container {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff80ab;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(255, 128, 171, 0.7), 0 0 20px rgba(255, 128, 171, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .box { background: #191312; border: 1px solid #3d312e; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: left; }
+        .box-title { font-size: 10px; color: #ff80ab; text-transform: uppercase; font-weight: bold; margin-bottom: 6px; }
+
+        label { display: block; font-size: 10px; margin-bottom: 4px; color: #a89a8c; font-weight: bold; }
+        select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #3d312e; background: #121010; color: #fff; font-size: 12px; outline: none; margin-bottom: 6px; }
+        select:focus { border-color: #ff80ab; }
+
+        .resultado { margin-top: 12px; padding-top: 12px; border-top: 1px solid #3d312e; }
+        .icono { font-size: 38px; }
+        .temp { font-size: 38px; font-weight: bold; color: #b9f6ca; }
+        .estado { font-size: 13px; color: #d1c7bd; margin-bottom: 8px; }
+
+        .detalles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #121010; padding: 8px; border-radius: 6px; font-size: 10px; border: 1px solid #3d312e; text-align: center; }
+        .detalles strong { color: #fff; font-size: 11px; display: block; margin-top: 2px; }
+
+        footer { margin-top: 15px; font-size: 10px; color: #a89a8c; }
+        footer strong { color: #ff80ab; }
+    </style>
+</head>
+<body>
+
+    <!-- BOTÓN SIN ENLACE EXTERNO -->
+    <a href="#" class="btn-portafolio">
+        <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="55" r="38" />
+            <path d="M 20 28 L 22 10 L 29 20 L 35 8 L 41 18 L 50 5 L 58 18 L 65 8 L 71 20 L 78 10 L 80 28" />
+            <line x1="33" y1="43" x2="43" y2="49" />
+            <line x1="67" y1="43" x2="57" y2="49" />
+            <path d="M 30 75 Q 50 63 70 75" />
+            <line x1="38" y1="65" x2="38" y2="76" />
+            <line x1="46" y1="63" x2="46" y2="74" />
+            <line x1="54" y1="63" x2="54" y2="74" />
+            <line x1="62" y1="65" x2="62" y2="76" />
+        </svg>
+        <span>Cactus Jack</span>
+    </a>
+
+    <!-- LOGOS CACTUS JACK -->
+    <svg class="logo-fondo logo-carita" viewBox="0 0 200 200"><path d="M 35 110 C 25 50, 160 30, 175 100 C 185 155, 45 180, 35 110 Z"/><path d="M 45 60 L 35 30 L 52 50 L 55 20 L 68 45 L 75 15 L 85 42 L 95 10 L 105 40 L 120 15 L 128 42 L 140 20 L 145 48 L 160 30 L 158 60"/><path d="M 68 85 L 90 70 M 112 70 L 135 85"/><path d="M 55 140 Q 100 120 145 135"/><path d="M 70 122 L 70 148 M 88 120 L 88 144 M 108 118 L 108 143 M 128 120 L 128 142"/></svg>
+    <svg class="logo-fondo logo-cruz" viewBox="0 0 100 180"><path d="M 30 15 L 42 28 M 50 8 L 50 25 M 70 15 L 58 28"/><path d="M 42 38 Q 32 38 32 46 Q 32 54 42 54"/><path d="M 35 72 L 50 60 L 65 72 M 38 68 L 62 68"/><path d="M 20 85 L 80 85 M 35 85 L 35 95 M 65 85 L 65 98"/><path d="M 42 110 Q 32 110 32 110 Q 32 126 42 126"/><path d="M 35 132 L 65 132 M 50 132 L 50 148"/><path d="M 38 152 L 38 162 Q 50 168 62 162 L 62 152"/><path d="M 60 170 Q 38 170 50 175 Q 62 180 40 180"/></svg>
+
+    <div class="card">
+        <h2>Clima - Cactus Jack</h2>
+        <!-- RELOJ DIGITAL EN TIEMPO REAL -->
+        <div id="reloj" class="reloj-container">00:00:00 AM</div>
+
+        <!-- 3 SELECTS DIRECTOS DE PERÚ -->
+        <div class="box">
+            <div class="box-title">🇵🇪 Ubicación Nacional (Perú)</div>
+            
+            <label>1. Departamento:</label>
+            <select id="selDept" onchange="alCambiarDepartamento()"></select>
+
+            <label>2. Provincia:</label>
+            <select id="selProv" onchange="alCambiarProvincia()"></select>
+
+            <label>3. Distrito / Pueblo:</label>
+            <select id="selDist" onchange="alCambiarDistrito()"></select>
+        </div>
+
+        <!-- 4TO SELECT DIRECTO: INTERNACIONAL / MUNDO APARTE -->
+        <div class="box">
+            <div class="box-title">🌎 4. Internacional / Mundo</div>
+            <select id="selMundo" onchange="cargarInternacional(this.value)">
+                <option value="" disabled selected>-- Selecciona una ciudad del mundo --</option>
+                <option value="40.4168,-3.7038,Madrid (España)">Madrid (España)</option>
+                <option value="40.7128,-74.0060,Nueva York (EE.UU.)">Nueva York (EE.UU.)</option>
+                <option value="35.6762,139.6503,Tokio (Japón)">Tokio (Japón)</option>
+                <option value="-34.6037,-58.3816,Buenos Aires (Argentina)">Buenos Aires (Argentina)</option>
+                <option value="48.8566,2.3522,París (Francia)">París (Francia)</option>
+                <option value="-33.4489,-70.6693,Santiago (Chile)">Santiago (Chile)</option>
+                <option value="19.4326,-99.1332,Ciudad de México (México)">Ciudad de México</option>
+                <option value="4.6097,-74.0817,Bogotá (Colombia)">Bogotá (Colombia)</option>
+                <option value="51.5074,-0.1278,Londres (Reino Unido)">Londres (Reino Unido)</option>
+            </select>
+        </div>
+
+        <!-- RESULTADOS DEL CLIMA -->
+        <div id="boxRes" class="resultado">
+            <h3 id="txtCiudad">Cargando clima...</h3>
+            <div id="txtIcono" class="icono">☀️</div>
+            <div id="txtTemp" class="temp">--°C</div>
+            <div id="txtEstado" class="estado">Consultando...</div>
+
+            <div class="detalles">
+                <div>💧 Humedad: <strong id="txtHumedad">--%</strong></div>
+                <div>💨 Viento: <strong id="txtViento">-- km/h</strong></div>
+                <div>🌡️ Sensación: <strong id="txtSensacion">--°C</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>Desarrollado por: <strong>Edgar Marcel Quispe Taype</strong></footer>
+
+    <script>
+        // RELOJ DIGITAL NEÓN
+        function actualizarReloj() {
+            const ahora = new Date();
+            let h = ahora.getHours();
+            const m = String(ahora.getMinutes()).padStart(2, '0');
+            const s = String(ahora.getSeconds()).padStart(2, '0');
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            document.getElementById('reloj').textContent = `${String(h).padStart(2, '0')}:${m}:${s} ${ampm}`;
+        }
+        setInterval(actualizarReloj, 1000);
+        actualizarReloj();
+
+        // ESTRUCTURA DIRECTA CON LOS DEPARTAMENTOS Y SUS PROVINCIAS
+        const DATA_PERU = {
+            "Arequipa": {
+                "Castilla": ["Orcopampa", "Aplao", "Viraco", "Chachas", "Andagua", "Pamacolca", "Tipán", "Uñón"],
+                "Arequipa": ["Arequipa", "Yanahuara", "Cayma", "Cerro Colorado", "Bustamante y Rivero", "Paucarpata", "Sachaca", "Socabaya"],
+                "Camaná": ["Camaná", "La Pampa", "San José", "Mariscal Cáceres"],
+                "Islay": ["Mollendo", "Mejía", "Cocachacra", "Punta de Bombón"],
+                "Caylloma": ["Chivay", "Maca", "Yanque", "Cabanaconde"],
+                "Caravelí": ["Caravelí", "Atico", "Chala"],
+                "Condesuyos": ["Chuquibamba", "Iray", "Río Grande"],
+                "La Unión": ["Cotahuasi", "Alca", "Tomepampa"]
+            },
+            "Junín": {
+                "Huancayo": ["El Tambo", "Chilca", "Huancayo (Centro)", "Pilcomayo", "Huancán", "Huayucachi", "San Jerónimo", "Sicaya"],
+                "Chupaca": ["Chupaca", "Ahuac", "Huáchac", "Tres de Diciembre"],
+                "Tarma": ["Tarma", "Acrococha", "Palca", "Huaricolca"],
+                "Satipo": ["Satipo", "Pangoa", "Mazamari", "Río Negro"],
+                "Jauja": ["Jauja", "Yauyos", "Acolla", "Sausa"],
+                "Chanchamayo": ["La Merced", "Pichanaqui", "Perené", "San Ramón"],
+                "Yauli": ["La Oroya", "Morococha", "Yauli"],
+                "Concepción": ["Concepción", "Mito", "Orcotuna"]
+            },
+            "Lima": {
+                "Lima": ["Miraflores", "San Isidro", "Lima Cercado", "Los Olivos", "La Molina", "Surco", "San Juan de Lurigancho"],
+                "Cañete": ["San Vicente", "Lunahuaná", "Mala", "Asia"],
+                "Huaral": ["Huaral", "Chancay", "Aucallama"],
+                "Huaura": ["Huacho", "Hualmay", "Carquín"]
+            },
+            "Cusco": {
+                "Cusco": ["Cusco", "Wanchaq", "San Sebastián", "Santiago"],
+                "Urubamba": ["Urubamba", "Machu Picchu Pueblo", "Ollantaytambo", "Yucay"],
+                "La Convención": ["Quillabamba", "Echarate"]
+            },
+            "Áncash": {
+                "Huaraz": ["Huaraz", "Independencia"],
+                "Santa": ["Chimbote", "Nuevo Chimbote", "Coishco"]
+            },
+            "Apurímac": {
+                "Abancay": ["Abancay", "Tamburco"],
+                "Andahuaylas": ["Andahuaylas", "Talavera"]
+            },
+            "Ayacucho": {
+                "Huamanga": ["Ayacucho", "Carmen Alto", "San Juan Bautista"],
+                "Huanta": ["Huanta", "Luricocha"]
+            },
+            "Cajamarca": {
+                "Cajamarca": ["Cajamarca", "Baños del Inca"],
+                "Jaén": ["Jaén", "Bellavista"]
+            },
+            "Callao": {
+                "Callao": ["Callao", "Bellavista", "La Punta", "Ventanilla"]
+            },
+            "Huancavelica": {
+                "Huancavelica": ["Huancavelica", "Ascensión"],
+                "Tayacaja": ["Pampas", "Ahuaycha"]
+            },
+            "Huánuco": {
+                "Huánuco": ["Huánuco", "Amarilis", "Pillco Marca"],
+                "Leoncio Prado": ["Tingo María"]
+            },
+            "Ica": {
+                "Ica": ["Ica", "La Tinguiña", "Parcona"],
+                "Pisco": ["Pisco", "Paracas"],
+                "Chincha": ["Chincha Alta", "Sunampe"]
+            },
+            "La Libertad": {
+                "Trujillo": ["Trujillo", "Victor Larco", "Huanchaco", "El Porvenir"],
+                "Sánchez Carrión": ["Huamachuco"]
+            },
+            "Lambayeque": {
+                "Chiclayo": ["Chiclayo", "Pimentel", "La Victoria"],
+                "Lambayeque": ["Lambayeque"]
+            },
+            "Loreto": {
+                "Maynas": ["Iquitos", "Punchana", "Belén"]
+            },
+            "Madre de Dios": {
+                "Tambopata": ["Puerto Maldonado"]
+            },
+            "Moquegua": {
+                "Mariscal Nieto": ["Moquegua", "Samegua"],
+                "Ilo": ["Ilo", "Pacocha"]
+            },
+            "Pasco": {
+                "Pasco": ["Cerro de Pasco", "Chaupimarca"],
+                "Oxapampa": ["Oxapampa", "Pozuzo"]
+            },
+            "Piura": {
+                "Piura": ["Piura", "Castilla", "Catacaos"],
+                "Sullana": ["Sullana", "Bellavista"],
+                "Talara": ["Talara", "Máncora"]
+            },
+            "Puno": {
+                "Puno": ["Puno", "Chucuito"],
+                "San Román": ["Juliaca"]
+            },
+            "San Martín": {
+                "San Martín": ["Tarapoto", "Morales"],
+                "Moyobamba": ["Moyobamba"]
+            },
+            "Tacna": {
+                "Tacna": ["Tacna", "Alto de la Alianza", "Pocollay"]
+            },
+            "Tumbes": {
+                "Tumbes": ["Tumbes", "Zarumilla"]
+            },
+            "Ucayali": {
+                "Coronel Portillo": ["Pucallpa", "Yarinacocha"]
+            }
+        };
+
+        const selDept = document.getElementById('selDept');
+        const selProv = document.getElementById('selProv');
+        const selDist = document.getElementById('selDist');
+        const selMundo = document.getElementById('selMundo');
+
+        // Llenar Departamentos al iniciar
+        function iniciar() {
+            selDept.innerHTML = "";
+            Object.keys(DATA_PERU).forEach(d => {
+                selDept.innerHTML += `<option value="${d}">${d}</option>`;
+            });
+            selDept.value = "Junín";
+            alCambiarDepartamento();
+        }
+
+        function alCambiarDepartamento() {
+            selMundo.selectedIndex = 0;
+            const dpto = selDept.value;
+            const provincias = DATA_PERU[dpto];
+
+            selProv.innerHTML = "";
+            Object.keys(provincias).forEach(p => {
+                selProv.innerHTML += `<option value="${p}">${p}</option>`;
+            });
+
+            alCambiarProvincia();
+        }
+
+        function alCambiarProvincia() {
+            selMundo.selectedIndex = 0;
+            const dpto = selDept.value;
+            const prov = selProv.value;
+            const distritos = DATA_PERU[dpto][prov];
+
+            selDist.innerHTML = "";
+            distritos.forEach(dist => {
+                selDist.innerHTML += `<option value="${dist}">${dist}</option>`;
+            });
+
+            alCambiarDistrito();
+        }
+
+        function alCambiarDistrito() {
+            selMundo.selectedIndex = 0;
+            const dpto = selDept.value;
+            const prov = selProv.value;
+            const dist = selDist.value;
+
+            const queryGeo = `${dist}, ${prov}, ${dpto}, Peru`;
+            buscarClimaGeo(queryGeo, `${dist} (${prov})`);
+        }
+
+        function cargarInternacional(val) {
+            if (!val) return;
+            const [lat, lon, nom] = val.split(',');
+            obtenerClimaPorCoords(lat, lon, nom);
+        }
+
+        function buscarClimaGeo(query, nombreMostrar) {
+            fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=es&format=json`)
+                .then(r => r.json())
+                .then(d => {
+                    if (d.results && d.results[0]) {
+                        obtenerClimaPorCoords(d.results[0].latitude, d.results[0].longitude, nombreMostrar);
+                    } else {
+                        // Respaldo por provincia
+                        const provNombre = selProv.value;
+                        fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(provNombre)}&count=1&language=es&format=json`)
+                            .then(r => r.json())
+                            .then(d2 => {
+                                if (d2.results && d2.results[0]) {
+                                    obtenerClimaPorCoords(d2.results[0].latitude, d2.results[0].longitude, nombreMostrar);
+                                }
+                            });
+                    }
+                });
+        }
+
+        function obtenerClimaPorCoords(lat, lon, nom) {
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code&timezone=auto`)
+                .then(r => r.json())
+                .then(d => {
+                    document.getElementById('txtCiudad').textContent = nom;
+                    document.getElementById('txtTemp').textContent = `${Math.round(d.current.temperature_2m)}°C`;
+                    document.getElementById('txtHumedad').textContent = `${d.current.relative_humidity_2m}%`;
+                    document.getElementById('txtViento').textContent = `${Math.round(d.current.wind_speed_10m)} km/h`;
+                    document.getElementById('txtSensacion').textContent = `${Math.round(d.current.apparent_temperature)}°C`;
+
+                    const c = d.current.weather_code;
+                    let est = { texto: 'Nublado', icono: '☁️' };
+                    if (c === 0) est = { texto: 'Despejado', icono: '☀️' };
+                    else if (c <= 3) est = { texto: 'Parcialmente Nublado', icono: '⛅' };
+                    else if (c <= 67) est = { texto: 'Lluvia / Llovizna', icono: '🌧️' };
+                    else if (c >= 95) est = { texto: 'Tormenta Eléctrica', icono: '⚡' };
+
+                    document.getElementById('txtEstado').textContent = est.texto;
+                    document.getElementById('txtIcono').textContent = est.icono;
+                });
+        }
+
+        iniciar();
+    </script>
+</body>
+</html>
