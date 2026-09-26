@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,7 @@
         .logo-carita { top: 3%; left: 3%; width: 140px; height: 140px; }
         .logo-cruz { bottom: 3%; right: 3%; width: 120px; height: 190px; }
 
-        /* BOTÓN EN LA ESQUINA SUPERIOR DERECHA (SIN LINK EXTERNO) */
+        /* BOTÓN DE PORTAFOLIO EN LA ESQUINA SUPERIOR DERECHA */
         .btn-portafolio {
             position: absolute;
             top: 20px;
@@ -76,13 +76,14 @@
         .detalles strong { color: #fff; font-size: 11px; display: block; margin-top: 2px; }
 
         footer { margin-top: 15px; font-size: 10px; color: #a89a8c; }
-        footer strong { color: #ff80ab; }
+        footer a { color: #ff80ab; text-decoration: none; font-weight: bold; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <!-- BOTÓN SIN ENLACE EXTERNO -->
-    <a href="#" class="btn-portafolio">
+    <!-- BOTÓN QUE REGRESA A TU PORTAFOLIO -->
+    <a href="https://portafolio-flame-nine-71.vercel.app/" target="_blank" class="btn-portafolio" title="Ir a Mi Portafolio">
         <svg viewBox="0 0 100 100">
             <circle cx="50" cy="55" r="38" />
             <path d="M 20 28 L 22 10 L 29 20 L 35 8 L 41 18 L 50 5 L 58 18 L 65 8 L 71 20 L 78 10 L 80 28" />
@@ -94,7 +95,7 @@
             <line x1="54" y1="63" x2="54" y2="74" />
             <line x1="62" y1="65" x2="62" y2="76" />
         </svg>
-        <span>Cactus Jack</span>
+        <span>Portafolio</span>
     </a>
 
     <!-- LOGOS CACTUS JACK -->
@@ -103,24 +104,18 @@
 
     <div class="card">
         <h2>Clima - Cactus Jack</h2>
-        <!-- RELOJ DIGITAL EN TIEMPO REAL -->
         <div id="reloj" class="reloj-container">00:00:00 AM</div>
 
-        <!-- 3 SELECTS DIRECTOS DE PERÚ -->
         <div class="box">
             <div class="box-title">🇵🇪 Ubicación Nacional (Perú)</div>
-            
             <label>1. Departamento:</label>
             <select id="selDept" onchange="alCambiarDepartamento()"></select>
-
             <label>2. Provincia:</label>
             <select id="selProv" onchange="alCambiarProvincia()"></select>
-
             <label>3. Distrito / Pueblo:</label>
             <select id="selDist" onchange="alCambiarDistrito()"></select>
         </div>
 
-        <!-- 4TO SELECT DIRECTO: INTERNACIONAL / MUNDO APARTE -->
         <div class="box">
             <div class="box-title">🌎 4. Internacional / Mundo</div>
             <select id="selMundo" onchange="cargarInternacional(this.value)">
@@ -137,7 +132,6 @@
             </select>
         </div>
 
-        <!-- RESULTADOS DEL CLIMA -->
         <div id="boxRes" class="resultado">
             <h3 id="txtCiudad">Cargando clima...</h3>
             <div id="txtIcono" class="icono">☀️</div>
@@ -152,10 +146,9 @@
         </div>
     </div>
 
-    <footer>Desarrollado por: <strong>Edgar Marcel Quispe Taype</strong></footer>
+    <footer>Desarrollado por: <a href="https://portafolio-flame-nine-71.vercel.app/" target="_blank">Edgar Marcel Quispe Taype</a></footer>
 
     <script>
-        // RELOJ DIGITAL NEÓN
         function actualizarReloj() {
             const ahora = new Date();
             let h = ahora.getHours();
@@ -168,7 +161,6 @@
         setInterval(actualizarReloj, 1000);
         actualizarReloj();
 
-        // ESTRUCTURA DIRECTA CON LOS DEPARTAMENTOS Y SUS PROVINCIAS
         const DATA_PERU = {
             "Arequipa": {
                 "Castilla": ["Orcopampa", "Aplao", "Viraco", "Chachas", "Andagua", "Pamacolca", "Tipán", "Uñón"],
@@ -284,7 +276,6 @@
         const selDist = document.getElementById('selDist');
         const selMundo = document.getElementById('selMundo');
 
-        // Llenar Departamentos al iniciar
         function iniciar() {
             selDept.innerHTML = "";
             Object.keys(DATA_PERU).forEach(d => {
@@ -344,7 +335,6 @@
                     if (d.results && d.results[0]) {
                         obtenerClimaPorCoords(d.results[0].latitude, d.results[0].longitude, nombreMostrar);
                     } else {
-                        // Respaldo por provincia
                         const provNombre = selProv.value;
                         fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(provNombre)}&count=1&language=es&format=json`)
                             .then(r => r.json())
